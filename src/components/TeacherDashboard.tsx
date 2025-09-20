@@ -23,7 +23,7 @@ interface StudentPortfolio {
 type SortableColumn = 'name' | 'gpa';
 
 const TeacherDashboard = () => {
-  const students = usePortfolioStore((state) => state.students) as StudentPortfolio[];
+  const students: StudentPortfolio[] = usePortfolioStore((state) => state.students);
   // สถานะเก็บคอลัมน์ที่ใช้เรียงลำดับ (เริ่มต้นด้วย 'name')
   const [sortBy, setSortBy] = useState<SortableColumn>('name');
   // สถานะเก็บทิศทางการเรียงลำดับ (เริ่มต้นด้วย 'asc')

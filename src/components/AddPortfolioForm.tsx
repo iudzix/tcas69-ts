@@ -1,10 +1,11 @@
-"use client"; 
+"use client";  
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { usePortfolioStore } from '@/store/portfolioStore'; 
+import { StudentPortfolio } from '@/store/portfolioStore';
 
 // 1. 🟢 แก้ไข Validation Schema: บังคับให้ใส่ทุกช่อง (ยกเว้น specialSkills และ photos) 🟢
 const FormSchema = z.object({
@@ -26,10 +27,14 @@ const FormSchema = z.object({
   
   // 🟢 ฟิลด์ยกเว้น 🟢
   specialSkills: z.string().optional(), // OPTIONAL: ความสามารถพิเศษ
-  photos: z.any().optional(), // OPTIONAL: รูปภาพ
+  photos: z
+  .array(z.string().url())
+  .optional()
 });
 
 type FormFields = z.infer<typeof FormSchema>;
+
+
 
 // ... (ฟังก์ชัน handleImageUpload เหมือนเดิม) ...
 const handleImageUpload = (fileList: FileList | undefined): Promise<string[]> => {
@@ -78,7 +83,7 @@ const AddPortfolioForm = () => {
       photos: photosBase64,
     };
     
-    addStudent(studentData as any);
+    addStudent(studentData as StudentPortfolio);
     alert('บันทึก Portfolio เรียบร้อย!');
     reset(); 
   };

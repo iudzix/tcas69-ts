@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface StudentPortfolio {
+export interface StudentPortfolio {
   id: string;
   name: string;
   lastName: string;

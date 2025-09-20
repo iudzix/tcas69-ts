@@ -26,7 +26,7 @@ const FormSchema = z.object({
   
   // 🟢 ฟิลด์ยกเว้น 🟢
   specialSkills: z.string().optional(), // OPTIONAL: ความสามารถพิเศษ
-  photos: z.any().optional(), // OPTIONAL: รูปภาพ
+  photos: z.instanceof(FileList).optional(), // OPTIONAL: รูปภาพ (ใช้ FileList สำหรับ input type="file")
 });
 
 type FormFields = z.infer<typeof FormSchema>;
@@ -72,13 +72,22 @@ const AddPortfolioForm = () => {
     const fileList = data.photos as unknown as FileList;
     const photosBase64 = await handleImageUpload(fileList);
     
-    const studentData = {
-      ...data, 
+    const newStudent: StudentPortfolio = {
+      id: Math.random().toString(36).substring(2, 11), // สร้าง ID ชั่วคราว
+      name: data.name,
+      lastName: data.lastName,
+      address: data.address,
+      phone: data.phone,
+      school: data.school,
       gpa: parseFloat(data.gpa as unknown as string),
+      specialSkills: data.specialSkills || '', // ตรวจสอบให้แน่ใจว่ามีค่า default ถ้าเป็น optional
+      reason: data.reason,
+      major: data.major,
+      university: data.university,
       photos: photosBase64,
     };
     
-    addStudent(studentData as any);
+    addStudent(newStudent);
     alert('บันทึก Portfolio เรียบร้อย!');
     reset(); 
   };

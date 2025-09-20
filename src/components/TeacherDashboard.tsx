@@ -32,13 +32,15 @@ const TeacherDashboard = () => {
   // 1. Logic การเรียงลำดับ: ใช้ useMemo เพื่อคำนวณเฉพาะเมื่อ students, sortBy หรือ sortDirection เปลี่ยน
   const sortedStudents = useMemo(() => {
     return [...students].sort((a, b) => {
-      let aValue: any = a[sortBy];
-      let bValue: any = b[sortBy];
+      let aValue: string | number;
+      let bValue: string | number;
 
-      // สำหรับการเรียงชื่อ เราจะรวมชื่อและนามสกุลเพื่อให้เรียงทั้งชื่อเต็ม
       if (sortBy === 'name') {
-          aValue = `${a.name} ${a.lastName}`;
-          bValue = `${b.name} ${b.lastName}`;
+        aValue = `${a.name} ${a.lastName}`;
+        bValue = `${b.name} ${b.lastName}`;
+      } else {
+        aValue = a[sortBy];
+        bValue = b[sortBy];
       }
       
       let comparison = 0;

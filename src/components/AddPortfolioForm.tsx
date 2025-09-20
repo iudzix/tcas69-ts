@@ -16,10 +16,9 @@ const FormSchema = z.object({
   school: z.string().min(1, "กรุณากรอกชื่อโรงเรียน"), 
   
   // ข้อมูลการศึกษา/สมัคร: REQUIRED
-  gpa: z.coerce.number({
-        required_error: "กรุณากรอก GPA", // ข้อความ error สำหรับกรณีไม่ได้กรอก
-        invalid_type_error: "GPA ต้องเป็นตัวเลข" // ข้อความ error สำหรับกรณีพิมพ์ผิดประเภท
-    }).min(0.0, "GPA ต้องไม่ติดลบ").max(4.0, "GPA ต้องไม่เกิน 4.0"),
+  gpa: z.coerce.number()
+    .min(0.0, "GPA ต้องไม่ติดลบ")
+    .max(4.0, "GPA ต้องไม่เกิน 4.0"),
     
   reason: z.string().min(20, "กรุณากรอกเหตุผลในการสมัครอย่างน้อย 20 ตัวอักษร"), 
   major: z.string().min(1, "กรุณาระบุสาขาที่เลือก"),
@@ -39,7 +38,7 @@ const handleImageUpload = (fileList: FileList | undefined): Promise<string[]> =>
     const filesArray = Array.from(fileList);
     return Promise.all(
         filesArray.map(file => {
-            return new Promise((resolve, reject) => {
+            return new Promise<string>((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     if (typeof reader.result === 'string') {
@@ -65,7 +64,8 @@ const AddPortfolioForm = () => {
     reset,
     formState: { errors } 
   } = useForm<FormFields>({
-    resolver: zodResolver(FormSchema), 
+    resolver: zodResolver(FormSchema) as unknown as import("react-hook-form").Resolver<FormFields>,
+
   });
 
   const onSubmit = async (data: FormFields) => {
